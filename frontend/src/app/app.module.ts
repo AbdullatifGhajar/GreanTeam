@@ -22,6 +22,9 @@ import {HomeComponent} from './home/home.component';
 import {NavigationComponent} from './navigation/navigation.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
+import {MatMenuModule} from "@angular/material/menu";
+import { WelcomeComponent } from './welcome/welcome.component';
+import {MatInputModule} from "@angular/material/input";
 
 
 @NgModule({
@@ -34,7 +37,8 @@ import {MatListModule} from '@angular/material/list';
     AwardsComponent,
     AnalysisComponent,
     HomeComponent,
-    NavigationComponent
+    NavigationComponent,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +57,9 @@ import {MatListModule} from '@angular/material/list';
     MatButtonModule,
     MatTooltipModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatMenuModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

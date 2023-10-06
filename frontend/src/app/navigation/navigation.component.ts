@@ -11,6 +11,7 @@ export class NavigationComponent {
   private document = inject(DOCUMENT);
 
   private globalService = inject(GlobalService);
+  protected isLoggedIn$ = this.globalService.isLoggedIn$;
   protected readonly title = this.globalService.title;
   protected readonly shortTitle = this.globalService.shortTitle;
   protected readonly like$ = this.globalService.like$;
@@ -31,5 +32,9 @@ export class NavigationComponent {
 
   protected onLikeDislike() {
     this.globalService.toggleLikeDislike();
+  }
+
+  protected onLogout() {
+    this.globalService.logout();
   }
 }

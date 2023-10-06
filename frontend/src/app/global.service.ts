@@ -2,14 +2,15 @@ import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {map, shareReplay} from "rxjs/operators";
+import {ɵTypedOrUntyped} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
   readonly version: string = 'v1.0.0';
-  readonly title: string = `Greeny`;
-  readonly shortTitle: string = `Greeny`;
+  readonly title: string = `GREENY`;
+  readonly shortTitle: string = `GREENY`;
 
   get combinedTitle(): string {
     return `${this.title} (${this.version})`;
@@ -19,11 +20,36 @@ export class GlobalService {
   private likeSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.loadLikeDislike());
   readonly like$ = this.likeSubject.asObservable();
 
+  private loginStatusSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  readonly isLoggedIn$ = this.loginStatusSubject.asObservable();
+
   constructor() {
     this.likeSubject.subscribe(like => this.saveLikeDislike(like));
   }
 
-   // Like/Dislike functions
+  // Login functions
+  get isLoggedIn(): boolean {
+    if (!this.loginStatusSubject.value)
+      this.loginStatusSubject.next(this.loadLoginStatus());
+    return this.loginStatusSubject.value;
+  }
+
+  private loadLoginStatus() {
+    return false;
+  }
+
+  login(data: { password: any; email: string }) {
+    if (data.email && data.password)
+      this.loginStatusSubject.next(true);
+  }
+
+  logout() {
+    this.loginStatusSubject.next(false);
+  }
+
+
+
+  // Like/Dislike functions
   get like(): boolean {
     if (!this.likeSubject.value)
       this.likeSubject.next(this.loadLikeDislike());

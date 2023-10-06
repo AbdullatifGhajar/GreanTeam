@@ -8,6 +8,7 @@ import {Title} from "@angular/platform-browser";
 import {GlobalService} from "./global.service";
 import {AnalysisComponent} from "./analysis/analysis.component";
 import {AwardsComponent} from "./awards/awards.component";
+import {WelcomeComponent} from "./welcome/welcome.component";
 
 @Injectable()
 export class TemplatePageTitleStrategy extends TitleStrategy {
@@ -29,13 +30,14 @@ export class TemplatePageTitleStrategy extends TitleStrategy {
 }
 
 const routes: Routes = [
-  {path: 'home', component: HomeComponent, title: ''},
+  {path: '', component: WelcomeComponent, title: ''},
+  {path: 'home', component: HomeComponent, title: 'Home'},
   {path: 'login', component: LoginComponent, title: 'Login'},
   {path: 'register', component: RegisterComponent, title: 'Register'},
   {path: 'awards', component: AwardsComponent, title: 'Awards'},
   {path: 'analysis', component: AnalysisComponent, title: 'Analysis'},
   {path: 'sustainability', component: SustainabilityComponent, title: 'Sustainability'},
-  {path: '**', redirectTo: 'home'}
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({

@@ -1,23 +1,23 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'push' : 'side'"
-      [opened]="(isHandset$ | async) === false">
-    <mat-nav-list>
-      <a mat-list-item routerLink="/home" routerLinkActive="routerLinkActive">Home</a>
-      <a mat-list-item routerLink="/awards" routerLinkActive="routerLinkActive">Awards</a>
-      <a mat-list-item routerLink="/analysis" routerLinkActive="routerLinkActive">Analysis</a>
-      <a mat-list-item routerLink="/sustainability" routerLinkActive="routerLinkActive">Sustainability</a>
+               [attr.role]="'dialog'"
+               [mode]="'push'"
+               [opened]="">
+    <mat-nav-list *ngIf="(isLoggedIn$ | async)">
+      <a mat-list-item routerLink="/home" routerLinkActive="routerLinkActive" (click)="drawer.close()">Home</a>
+      <a mat-list-item routerLink="/awards" routerLinkActive="routerLinkActive" (click)="drawer.close()">Awards</a>
+      <a mat-list-item routerLink="/analysis" routerLinkActive="routerLinkActive" (click)="drawer.close()">Analysis</a>
+      <a mat-list-item routerLink="/sustainability" routerLinkActive="routerLinkActive" (click)="drawer.close()">Sustainability</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
       <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()"
+          *ngIf="(isLoggedIn$ | async)">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span aria-label="Name of the app">{{ (isXSmall$ | async) ? shortTitle : title }}</span>
@@ -29,6 +29,26 @@
       </button>
       <button mat-icon-button (click)="onShare()" matTooltip="Share..." aria-label="Share button">
         <mat-icon>share</mat-icon>
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Profile" *ngIf="(isLoggedIn$ | async)">
+        <mat-icon>person</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <button mat-menu-item *ngIf="(isLoggedIn$ | async)" (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+        <button mat-menu-item *ngIf="!(isLoggedIn$ | async)" routerLink="login">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </button>
+      </mat-menu>
+      <button mat-icon-button *ngIf="!(isLoggedIn$ | async)" routerLink="login">
+        <mat-icon>login</mat-icon>
       </button>
     </mat-toolbar>
 

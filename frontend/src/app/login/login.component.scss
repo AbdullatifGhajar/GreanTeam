@@ -1,0 +1,22 @@
+.form-container {
+  margin: 16px;
+  border-radius: 4px;
+  background: var(--mat-stepper-container-color);
+  padding: 16px;
+}
+
+.button-row {
+  display: flex;
+  gap: 16px;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
