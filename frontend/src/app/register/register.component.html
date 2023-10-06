@@ -1,1 +1,46 @@
-<p>register works!</p>
+<div style="    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;">
+  <form [formGroup]="registerForm" class="form-container example-form" (submit)="onRegister()">
+    <mat-form-field class="example-full-width">
+      <mat-label>Name</mat-label>
+      <input type="email" matInput formControlName="name" placeholder="Your name">
+      <mat-hint *ngIf="registerForm.controls.name.invalid">Enter your name</mat-hint>
+      <mat-error *ngIf="registerForm.controls.name.hasError('required')">
+        Name is <strong>required</strong>.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Email</mat-label>
+      <input type="email" matInput formControlName="email" placeholder="Ex. pat@example.com">
+      <mat-hint *ngIf="registerForm.controls.email.invalid">Enter your email</mat-hint>
+      <mat-error
+          *ngIf="registerForm.controls.email.hasError('email') && !registerForm.controls.email.hasError('required')">
+        Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="registerForm.controls.email.hasError('required')">
+        Email is <strong>required</strong>.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Enter your password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+      <mat-hint *ngIf="registerForm.controls.password.invalid">Enter your password</mat-hint>
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-error *ngIf="registerForm.controls.password.hasError('required')">
+        Password is <strong>required</strong>.
+      </mat-error>
+    </mat-form-field>
+    <div class="button-row">
+      <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">Register</button>
+      <button mat-button color="accent" type="button" routerLink="/login">Login</button>
+    </div>
+    <mat-error *ngIf="loginError">
+      Email or password is wrong. Try again or register.
+    </mat-error>
+  </form>
+</div>
