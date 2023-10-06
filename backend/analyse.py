@@ -3,7 +3,9 @@ import math
 from .data import get_activities_from_file
 from .entities import ActivitySegment, Location
 
-GOOGLE_LOCATION_FILENAME = 'Data/Standortverlauf/Semantic Location History/2023/2023_APRIL.json'
+GOOGLE_LOCATION_FILENAME = (
+    "Data/Standortverlauf/Semantic Location History/2023/2023_APRIL.json"
+)
 
 activities: list[ActivitySegment] = get_activities_from_file(GOOGLE_LOCATION_FILENAME)
 
@@ -17,31 +19,41 @@ for activity in activities:
     if day not in activities_by_day:
         activities_by_day[day] = []
     activities_by_day[day].append(activity)
-    
+
+
 # trips
 def is_same_location(location1: Location, location2: Location):
     if location1.name and location2.name:
         return location1.name == location2.name
-    
-    THRESHOLD = 50000 # TODO: find a good value
-    return math.sqrt((location1.latitudeE7 - location2.latitudeE7)**2 + \
-           (location1.longitudeE7 - location2.longitudeE7)**2) < THRESHOLD
+
+    THRESHOLD = 50000  # TODO: find a good value
+    return (
+        math.sqrt(
+            (location1.latitudeE7 - location2.latitudeE7) ** 2
+            + (location1.longitudeE7 - location2.longitudeE7) ** 2
+        )
+        < THRESHOLD
+    )
+
 
 class Trip:
     def __init__(self, activity: ActivitySegment):
         self.activities:list[ActivitySegment] = [activity]
-    
+
     def has_multiple_activities(self):
-        return len(self.activities) > 1        
-        
+        return len(self.activities) > 1
+
+
 def is_activity_the_same_trip(activity: ActivitySegment, trip: Trip):
-    return is_same_location(activity.startLocation, trip.activities[0].startLocation) and \
-              is_same_location(activity.endLocation, trip.activities[0].endLocation)
+    return is_same_location(
+        activity.startLocation, trip.activities[0].startLocation
+    ) and is_same_location(activity.endLocation, trip.activities[0].endLocation)
+
 
 trips = []
 
-count_same = 0  
-count_dif = 0  
+count_same = 0
+count_dif = 0
 
 for activity in activities:
     for trip_point in trips:
@@ -52,7 +64,7 @@ for activity in activities:
     else:
         trips.append(Trip(activity))
         count_dif += 1
-            
+
 print("same: ", count_same)
 print("different: ", count_dif)
 
@@ -105,3 +117,11 @@ print("-----")
 
 for trip_point in trip_points:
     print(trip_point.trip.activities[0].startLocation, "->", trip_point.trip.activities[0].endLocation, "->", trip_point.trip.activities[0].distance, "->", trip_point.activityPoints)
+
+def get_overview():
+    # TODO: add arguments to choose the month
+    # TODO: call functions to calculate points and trips
+    return {
+        "points": 100,
+        "trips": [],
+    }
