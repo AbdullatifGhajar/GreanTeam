@@ -2,6 +2,7 @@ import math
 
 from .data import get_activities
 from .entities import ActivitySegment, Location
+from .map import reverse_geocode
 
 
 # trips
@@ -147,13 +148,13 @@ def get_overview(month, year):
         "points": point_sum,
         "trips": [
             {
-                "start": (
-                    trip_point.trip.activities[0].startLocation.latitudeE7,
-                    trip_point.trip.activities[0].startLocation.longitudeE7,
+                "start": reverse_geocode(
+                    trip_point.trip.activities[0].startLocation.latitudeE7 / 1e7,
+                    trip_point.trip.activities[0].startLocation.longitudeE7 / 1e7,
                 ),
-                "end": (
-                    trip_point.trip.activities[0].endLocation.latitudeE7,
-                    trip_point.trip.activities[0].endLocation.longitudeE7,
+                "end": reverse_geocode(
+                    trip_point.trip.activities[0].endLocation.latitudeE7 / 1e7,
+                    trip_point.trip.activities[0].endLocation.longitudeE7 / 1e7,
                 ),
                 "points": trip_point.activityPoints,
             }
