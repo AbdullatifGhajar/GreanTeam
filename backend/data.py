@@ -11,4 +11,7 @@ def get_activities_from_file(filename):
         if item.activitySegment:
             activities.append(item.activitySegment)
 
+    # sort activities by timestamp
+    activities.sort(key=lambda x: x.duration.startTimestamp)
+
     return activities

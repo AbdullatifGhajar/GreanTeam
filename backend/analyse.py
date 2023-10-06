@@ -7,19 +7,6 @@ GOOGLE_LOCATION_FILENAME = (
     "Data/Standortverlauf/Semantic Location History/2023/2023_APRIL.json"
 )
 
-activities: list[ActivitySegment] = get_activities_from_file(GOOGLE_LOCATION_FILENAME)
-
-# sort activities by timestamp
-activities.sort(key=lambda x: x.duration.startTimestamp)
-
-# group activities by day
-activities_by_day = {}
-for activity in activities:
-    day = activity.duration.startTimestamp.date()
-    if day not in activities_by_day:
-        activities_by_day[day] = []
-    activities_by_day[day].append(activity)
-
 
 # trips
 def is_same_location(location1: Location, location2: Location):
@@ -37,11 +24,16 @@ def is_same_location(location1: Location, location2: Location):
 
 
 class Trip:
+    REGULAR_TRIP_THRESHOLD = 4
+
     def __init__(self, activity: ActivitySegment):
-        self.activities:list[ActivitySegment] = [activity]
+        self.activities: list[ActivitySegment] = [activity]
 
     def has_multiple_activities(self):
         return len(self.activities) > 1
+
+    def is_regular_trip(self):
+        return len(self.activities) >= Trip.REGULAR_TRIP_THRESHOLD
 
 
 def is_activity_the_same_trip(activity: ActivitySegment, trip: Trip):
@@ -50,78 +42,128 @@ def is_activity_the_same_trip(activity: ActivitySegment, trip: Trip):
     ) and is_same_location(activity.endLocation, trip.activities[0].endLocation)
 
 
-trips = []
-
-count_same = 0
-count_dif = 0
-
-for activity in activities:
-    for trip_point in trips:
-        if is_activity_the_same_trip(activity, trip_point):
-            count_same += 1
-            trip_point.activities.append(activity)
-            break
-    else:
-        trips.append(Trip(activity))
-        count_dif += 1
-
-print("same: ", count_same)
-print("different: ", count_dif)
-
-# Console logging for check
-# for trip in trips:
-#     if trip.has_multiple_activities():
-#         print("Trip: ")
-
-#         for activity in trip.activities:
-#             print(activity.startLocation, "->", activity.endLocation, activity.activityType, "with", activity.confidence, "confidence")
-
-    
 class HabitsPoints:
     def __init__(self, trip: Trip = None, activityPoints: str = None):
         self.trip = trip
         self.activityPoints = activityPoints
 
-regularTrips:list[Trip] = []
-trip_points:list[HabitsPoints] = []
 
-def calculate_user_points(max_points: int, activity_points: int):
-    percentage = activity_points / max_points
-    return int(200*percentage)
+regularTrips: list[Trip] = []
+trip_points: list[HabitsPoints] = []
 
 
-for trip_point in trips:
-    if len(trip_point.activities) >= 4:
-        regularTrips.append(trip_point)
+def import_trips():
+    activities: list[ActivitySegment] = get_activities_from_file(
+        GOOGLE_LOCATION_FILENAME
+    )
 
-print("Regular Trips (with at least 4 activities):")
-for trip_point in regularTrips:
-    max_points = len(trip_point.activities) * 2.0
-    activity_points = 0.0
+    trips = []
 
-    print("Trip:")
-    for activity in trip_point.activities:
-        print(activity.startLocation, "->", activity.endLocation, activity.activityType, "with", activity.confidence, "confidence")
-        if activity.activityType=="WALKING" or activity.activityType=="CYCLING" or activity.activityType=="RUNNING":
-            activity_points += 2
-        elif activity.activityType=="IN_BUS" or activity.activityType=="IN_TRAIN" or activity.activityType=="IN_PASSENGER" or activity.activityType=="VEHICLE IN_TRAM":
-            activity_points += 1
-    print(calculate_user_points(max_points, activity_points))
-    # add start and end location of the first activity, duration and user points
-    trip_points.append(HabitsPoints(trip_point, calculate_user_points(max_points, activity_points)))
+    count_same = 0
+    count_dif = 0
+
+    for activity in activities:
+        for trip in trips:
+            if is_activity_the_same_trip(activity, trip):
+                count_same += 1
+                trip.activities.append(activity)
+                break
+        else:
+            trips.append(Trip(activity))
+            count_dif += 1
+
+    print("same: ", count_same)
+    print("different: ", count_dif)
+
+    return trips
+
+
+def get_trip_points():
+    def calculate_user_points(max_points: int, activity_points: int):
+        percentage = activity_points / max_points
+        return int(200 * percentage)
+
+    trips = import_trips()
+
+    for trip in trips:
+        if not trip.is_regular_trip():
+            continue
+
+        max_points = len(trip.activities) * 2.0
+        activity_points = 0.0
+
+        print("Trip:")
+        for activity in trip.activities:
+            print(
+                activity.startLocation,
+                "->",
+                activity.endLocation,
+                activity.activityType,
+                "with",
+                activity.confidence,
+                "confidence",
+            )
+            if (
+                activity.activityType == "WALKING"
+                or activity.activityType == "CYCLING"
+                or activity.activityType == "RUNNING"
+            ):
+                activity_points += 2
+            elif (
+                activity.activityType == "IN_BUS"
+                or activity.activityType == "IN_TRAIN"
+                or activity.activityType == "IN_PASSENGER"
+                or activity.activityType == "VEHICLE IN_TRAM"
+            ):
+                activity_points += 1
+        print(calculate_user_points(max_points, activity_points))
+        # add start and end location of the first activity, duration and user points
+        trip_points.append(
+            HabitsPoints(trip, calculate_user_points(max_points, activity_points))
+        )
+
+    return trip_points
+
 
 print("-----")
 print("-----")
 print("-----")
 print("-----")
 
-for trip_point in trip_points:
-    print(trip_point.trip.activities[0].startLocation, "->", trip_point.trip.activities[0].endLocation, "->", trip_point.trip.activities[0].distance, "->", trip_point.activityPoints)
+for trip in trip_points:
+    print(
+        trip.trip.activities[0].startLocation,
+        "->",
+        trip.trip.activities[0].endLocation,
+        "->",
+        trip.trip.activities[0].distance,
+        "->",
+        trip.activityPoints,
+    )
+
 
 def get_overview():
     # TODO: add arguments to choose the month
-    # TODO: call functions to calculate points and trips
+    trip_points = get_trip_points()
+
+    point_sum = sum([trip.activityPoints for trip in trip_points])
+    print("point_sum: ", point_sum)
     return {
-        "points": 100,
-        "trips": [],
+        "year": 2023,
+        "month": "April",
+        "points": point_sum,
+        "trips": [
+            {
+                "start": (
+                    trip_point.trip.activities[0].startLocation.latitudeE7,
+                    trip_point.trip.activities[0].startLocation.longitudeE7,
+                ),
+                "end": (
+                    trip_point.trip.activities[0].endLocation.latitudeE7,
+                    trip_point.trip.activities[0].endLocation.longitudeE7,
+                ),
+                "points": trip_point.activityPoints,
+            }
+            for trip_point in trip_points
+        ],
     }
