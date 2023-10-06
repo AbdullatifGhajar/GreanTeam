@@ -23,9 +23,9 @@ def is_same_location(location1: Location, location2: Location):
     if location1.name and location2.name:
         return location1.name == location2.name
     
-    THRESHOLD = 50000 # meters
-    return math.sqrt(abs(location1.latitudeE7 - location2.latitudeE7) + \
-           abs(location1.longitudeE7 - location2.longitudeE7)) < THRESHOLD
+    THRESHOLD = 50000 # TODO: find a good value
+    return math.sqrt((location1.latitudeE7 - location2.latitudeE7)**2 + \
+           (location1.longitudeE7 - location2.longitudeE7)**2) < THRESHOLD
 
 class Trip:
     def __init__(self, activity: ActivitySegment):
@@ -60,5 +60,5 @@ for trip in trips:
     if trip.has_multiple_activities():
         print("Trip: ")
         for activity in trip.activities:
-            print(activity.startLocation, " -> ", activity.endLocation)
+            print(activity.startLocation, "->", activity.endLocation, activity.activityType)
         
