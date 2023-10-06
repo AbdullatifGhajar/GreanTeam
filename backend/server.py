@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from .analyse import get_overview
 from .data import get_available_period
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/login", methods=["get"])
