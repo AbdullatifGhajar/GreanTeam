@@ -21,11 +21,15 @@ class Location:
         self.sourceInfo = sourceInfo
         self.locationConfidence = locationConfidence
         self.calibratedProbability = calibratedProbability
+        
+    def __str__(self) -> str:
+        return f"{self.name if self.name else ''} ({self.latitudeE7 / 10000000.0}, {self.longitudeE7 / 10000000.0})"
 
 class Duration:
     def __init__(self, startTimestamp: str = None, endTimestamp: str = None):
-        self.startTimestamp = startTimestamp
-        self.endTimestamp = endTimestamp
+        self.startTimestamp = datetime.fromisoformat(startTimestamp.replace("Z", "+00:00")) if startTimestamp else None
+        self.endTimestamp = datetime.fromisoformat(endTimestamp.replace("Z", "+00:00")) if endTimestamp else None
+        self.value = self.endTimestamp - self.startTimestamp if startTimestamp and endTimestamp else None 
 
 class PlaceVisit:
     def __init__(self, location: Location = None, duration: Duration = None, placeConfidence: str = None, 
