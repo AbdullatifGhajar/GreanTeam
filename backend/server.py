@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 
 from .analyse import get_overview
+from .data import get_available_period
 
 app = Flask(__name__)
 
@@ -13,7 +14,14 @@ def login():
 
 @app.route("/overview", methods=["get"])
 def overview():
-    return jsonify(get_overview())
+    month = int(request.args.get("month"))
+    year = int(request.args.get("year"))
+    return jsonify(get_overview(month, year))
+
+
+@app.route("/available_period", methods=["get"])
+def available_period():
+    return jsonify(get_available_period())
 
 
 if __name__ == "__main__":

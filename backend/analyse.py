@@ -1,11 +1,7 @@
 import math
 
-from .data import get_activities_from_file
+from .data import get_activities
 from .entities import ActivitySegment, Location
-
-GOOGLE_LOCATION_FILENAME = (
-    "Data/Standortverlauf/Semantic Location History/2023/2023_APRIL.json"
-)
 
 
 # trips
@@ -52,10 +48,8 @@ regularTrips: list[Trip] = []
 trip_points: list[HabitsPoints] = []
 
 
-def import_trips():
-    activities: list[ActivitySegment] = get_activities_from_file(
-        GOOGLE_LOCATION_FILENAME
-    )
+def import_trips(month, year):
+    activities: list[ActivitySegment] = get_activities(month, year)
 
     trips = []
 
@@ -78,12 +72,12 @@ def import_trips():
     return trips
 
 
-def get_trip_points():
+def get_trip_points(month, year):
     def calculate_user_points(max_points: int, activity_points: int):
         percentage = activity_points / max_points
         return int(200 * percentage)
 
-    trips = import_trips()
+    trips = import_trips(month, year)
 
     for trip in trips:
         if not trip.is_regular_trip():
@@ -125,32 +119,31 @@ def get_trip_points():
     return trip_points
 
 
-print("-----")
-print("-----")
-print("-----")
-print("-----")
+# print("-----")
+# print("-----")
+# print("-----")
+# print("-----")
 
-for trip in trip_points:
-    print(
-        trip.trip.activities[0].startLocation,
-        "->",
-        trip.trip.activities[0].endLocation,
-        "->",
-        trip.trip.activities[0].distance,
-        "->",
-        trip.activityPoints,
-    )
+# for trip in trip_points:
+#     print(
+#         trip.trip.activities[0].startLocation,
+#         "->",
+#         trip.trip.activities[0].endLocation,
+#         "->",
+#         trip.trip.activities[0].distance,
+#         "->",
+#         trip.activityPoints,
+#     )
 
 
-def get_overview():
-    # TODO: add arguments to choose the month
-    trip_points = get_trip_points()
+def get_overview(month, year):
+    trip_points = get_trip_points(month, year)
 
     point_sum = sum([trip.activityPoints for trip in trip_points])
     print("point_sum: ", point_sum)
     return {
-        "year": 2023,
-        "month": "April",
+        "year": year,
+        "month": month,
         "points": point_sum,
         "trips": [
             {
