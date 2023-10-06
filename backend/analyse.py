@@ -32,7 +32,7 @@ class Trip:
         self.activities = [activity]
     
     def has_multiple_activities(self):
-        return len(self.activities) > 1
+        return len(self.activities) > 1        
         
 def is_activity_the_same_trip(activity: ActivitySegment, trip: Trip):
     return is_same_location(activity.startLocation, trip.activities[0].startLocation) and \
@@ -60,5 +60,4 @@ for trip in trips:
     if trip.has_multiple_activities():
         print("Trip: ")
         for activity in trip.activities:
-            print(activity.startLocation, "->", activity.endLocation, activity.activityType)
-        
+            print(activity.startLocation, "->", activity.endLocation, activity.activityType, "with", activity.confidence, "confidence")
