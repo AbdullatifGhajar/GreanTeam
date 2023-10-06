@@ -32,6 +32,11 @@ class Trip:
     def is_regular_trip(self):
         return len(self.activities) >= Trip.REGULAR_TRIP_THRESHOLD
 
+    def mean_distance(self):
+        return sum([activity.distance for activity in self.activities]) / len(
+            self.activities
+        )
+
 
 def is_activity_the_same_trip(activity: ActivitySegment, trip: Trip):
     return is_same_location(
@@ -148,6 +153,7 @@ def get_overview(month, year):
         "points": point_sum,
         "trips": [
             {
+                "distance": trip_point.trip.mean_distance(),
                 "start": reverse_geocode(
                     trip_point.trip.activities[0].startLocation.latitudeE7 / 1e7,
                     trip_point.trip.activities[0].startLocation.longitudeE7 / 1e7,
