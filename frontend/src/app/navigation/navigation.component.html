@@ -1,0 +1,42 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'push' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home" routerLinkActive="routerLinkActive">Home</a>
+      <a mat-list-item routerLink="/awards" routerLinkActive="routerLinkActive">Awards</a>
+      <a mat-list-item routerLink="/analysis" routerLinkActive="routerLinkActive">Analysis</a>
+      <a mat-list-item routerLink="/sustainability" routerLinkActive="routerLinkActive">Sustainability</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span aria-label="Name of the app">{{ (isXSmall$ | async) ? shortTitle : title }}</span>
+      <span class="spacer"></span>
+      <button mat-icon-button [color]="(like$ | async) ? 'warn' : undefined" (click)="onLikeDislike()"
+              [matTooltip]="(like$ | async) ? dislikeString : likeString"
+              aria-label="Like button">
+        <mat-icon>favorite</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onShare()" matTooltip="Share..." aria-label="Share button">
+        <mat-icon>share</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <div class="page-content mat-app-background">
+      <div class="router-content">
+        <router-outlet></router-outlet>
+      </div>
+      <!--<app-footer></app-footer>-->
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
