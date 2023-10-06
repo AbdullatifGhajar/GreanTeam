@@ -62,7 +62,12 @@ def get_available_period():
     first_month = list(MONTHS.keys())[list(MONTHS.values()).index(first_month)]
     last_month = list(MONTHS.keys())[list(MONTHS.values()).index(last_month)]
 
-    return first_month, first_year, last_month, last_year
+    return {
+        "firstMonth": first_month,
+        "firstYear": first_year,
+        "lastMonth": last_month,
+        "lastYear": last_year,
+    }
 
 
 print(get_available_period())
