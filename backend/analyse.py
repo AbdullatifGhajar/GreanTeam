@@ -29,7 +29,7 @@ def is_same_location(location1: Location, location2: Location):
 
 class Trip:
     def __init__(self, activity: ActivitySegment):
-        self.activities = [activity]
+        self.activities:list[ActivitySegment] = [activity]
     
     def has_multiple_activities(self):
         return len(self.activities) > 1        
@@ -44,10 +44,10 @@ count_same = 0
 count_dif = 0  
 
 for activity in activities:
-    for trip in trips:
-        if is_activity_the_same_trip(activity, trip):
+    for trip_point in trips:
+        if is_activity_the_same_trip(activity, trip_point):
             count_same += 1
-            trip.activities.append(activity)
+            trip_point.activities.append(activity)
             break
     else:
         trips.append(Trip(activity))
@@ -56,8 +56,52 @@ for activity in activities:
 print("same: ", count_same)
 print("different: ", count_dif)
 
-for trip in trips:
-    if trip.has_multiple_activities():
-        print("Trip: ")
-        for activity in trip.activities:
-            print(activity.startLocation, "->", activity.endLocation, activity.activityType, "with", activity.confidence, "confidence")
+# Console logging for check
+# for trip in trips:
+#     if trip.has_multiple_activities():
+#         print("Trip: ")
+
+#         for activity in trip.activities:
+#             print(activity.startLocation, "->", activity.endLocation, activity.activityType, "with", activity.confidence, "confidence")
+
+    
+class HabitsPoints:
+    def __init__(self, trip: Trip = None, activityPoints: str = None):
+        self.trip = trip
+        self.activityPoints = activityPoints
+
+regularTrips:list[Trip] = []
+trip_points:list[HabitsPoints] = []
+
+def calculate_user_points(max_points: int, activity_points: int):
+    percentage = activity_points / max_points
+    return int(200*percentage)
+
+
+for trip_point in trips:
+    if len(trip_point.activities) >= 4:
+        regularTrips.append(trip_point)
+
+print("Regular Trips (with at least 4 activities):")
+for trip_point in regularTrips:
+    max_points = len(trip_point.activities) * 2.0
+    activity_points = 0.0
+
+    print("Trip:")
+    for activity in trip_point.activities:
+        print(activity.startLocation, "->", activity.endLocation, activity.activityType, "with", activity.confidence, "confidence")
+        if activity.activityType=="WALKING" or activity.activityType=="CYCLING" or activity.activityType=="RUNNING":
+            activity_points += 2
+        elif activity.activityType=="IN_BUS" or activity.activityType=="IN_TRAIN" or activity.activityType=="IN_PASSENGER" or activity.activityType=="VEHICLE IN_TRAM":
+            activity_points += 1
+    print(calculate_user_points(max_points, activity_points))
+    # add start and end location of the first activity, duration and user points
+    trip_points.append(HabitsPoints(trip_point, calculate_user_points(max_points, activity_points)))
+
+print("-----")
+print("-----")
+print("-----")
+print("-----")
+
+for trip_point in trip_points:
+    print(trip_point.trip.activities[0].startLocation, "->", trip_point.trip.activities[0].endLocation, "->", trip_point.trip.activities[0].distance, "->", trip_point.activityPoints)
