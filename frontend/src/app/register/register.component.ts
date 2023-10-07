@@ -26,6 +26,7 @@ export class RegisterComponent {
   protected registerForm = this.fb.group({
     name: new FormControl<string | null>(null, [Validators.required]),
     email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
+    token: new FormControl<string | null>(null, Validators.required),
     password: new FormControl<string | null>(null, Validators.required),
   });
 
