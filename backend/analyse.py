@@ -38,6 +38,7 @@ class Trip:
         return sum([activity.distance for activity in self.activities]) / len(
             self.activities
         )
+
     def bad_transportation(self):
         return len(self.activities) - (self.nr_1 + self.nr_2)
 
@@ -49,17 +50,15 @@ def is_activity_the_same_trip(activity: ActivitySegment, trip: Trip):
 
 
 class HabitsPoints:
-    def __init__(self, trip: Trip = None, activityPoints: int = None, co2_saved: int = None):
+    def __init__(
+        self, trip: Trip = None, activityPoints: int = None, co2_saved: int = None
+    ):
         self.trip = trip
         self.activityPoints = activityPoints
         self.co2_saved = co2_saved
 
 
-regularTrips: list[Trip] = []
-trip_points: list[HabitsPoints] = []
-
-
-def import_trips(month, year)->list[Trip]:
+def import_trips(month, year) -> list[Trip]:
     activities: list[ActivitySegment] = get_activities(month, year)
 
     trips = []
@@ -82,10 +81,12 @@ def import_trips(month, year)->list[Trip]:
 
     return trips
 
+
 co2_car_per_meter = 0.17
 co2_bus_per_meter = 0.097
 co2_rail_per_meter = 0.035
 co2_tram_per_meter = 0.029
+
 
 def get_trip_points(month, year):
     def calculate_user_points(max_points: int, activity_points: int):
@@ -93,6 +94,7 @@ def get_trip_points(month, year):
         return int(200 * percentage)
 
     trips = import_trips(month, year)
+    trip_points: list[HabitsPoints] = []
 
     for trip in trips:
         if not trip.is_regular_trip():
@@ -114,7 +116,7 @@ def get_trip_points(month, year):
                 activity.confidence,
                 "confidence",
                 activity.distance,
-                "distance"
+                "distance",
             )
             if (
                 activity.activityType == "WALKING"
@@ -122,28 +124,33 @@ def get_trip_points(month, year):
                 or activity.activityType == "RUNNING"
             ):
                 activity_points += 2
-                saved_co2 += co2_car_per_meter*activity.distance
+                saved_co2 += co2_car_per_meter * activity.distance
                 nr_2 += 1
                 print("saved co2: ", saved_co2)
                 # add saved co2 based on distance between start and end location & mode of transportation compared to petrol car
-            elif (
-                activity.activityType == "IN_BUS"):
+            elif activity.activityType == "IN_BUS":
                 saved_co2 += activity.distance * (co2_car_per_meter - co2_bus_per_meter)
                 activity_points += 1
                 nr_1 += 1
-            elif(activity.activityType == "IN_TRAIN"):
-                saved_co2 += activity.distance * (co2_car_per_meter - co2_rail_per_meter)
+            elif activity.activityType == "IN_TRAIN":
+                saved_co2 += activity.distance * (
+                    co2_car_per_meter - co2_rail_per_meter
+                )
                 activity_points += 1
                 nr_1 += 1
-            elif(activity.activityType == "VEHICLE IN_TRAM"):
-                saved_co2 += activity.distance * (co2_car_per_meter - co2_tram_per_meter)
+            elif activity.activityType == "VEHICLE IN_TRAM":
+                saved_co2 += activity.distance * (
+                    co2_car_per_meter - co2_tram_per_meter
+                )
                 activity_points += 1
                 nr_1 += 1
         # add start and end location of the first activity, duration and user points
         trip.nr_2 = nr_2
         trip.nr_1 = nr_1
         trip_points.append(
-            HabitsPoints(trip, calculate_user_points(max_points, activity_points), int(saved_co2))
+            HabitsPoints(
+                trip, calculate_user_points(max_points, activity_points), int(saved_co2)
+            )
         )
 
     return trip_points
@@ -191,7 +198,7 @@ def get_overview(month, year):
                 "nr_of_activities": len(trip_point.trip.activities),
                 "amount_walk_bike_run": trip_point.trip.nr_2,
                 "amount_rail_bus_tram": trip_point.trip.nr_1,
-                "amount_car": trip_point.trip.bad_transportation()
+                "amount_car": trip_point.trip.bad_transportation(),
             }
             for trip_point in trip_points
         ],
