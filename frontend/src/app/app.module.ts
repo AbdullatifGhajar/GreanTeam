@@ -5,7 +5,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FooterComponent} from './footer/footer.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
@@ -25,6 +25,9 @@ import {MatListModule} from '@angular/material/list';
 import {MatMenuModule} from "@angular/material/menu";
 import { WelcomeComponent } from './welcome/welcome.component';
 import {MatInputModule} from "@angular/material/input";
+import {HttpClientModule} from "@angular/common/http";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from '@angular/material/core';
 
 
 @NgModule({
@@ -59,7 +62,11 @@ import {MatInputModule} from "@angular/material/input";
     MatSidenavModule,
     MatListModule,
     MatMenuModule,
-    MatInputModule
+    MatInputModule,
+    HttpClientModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
