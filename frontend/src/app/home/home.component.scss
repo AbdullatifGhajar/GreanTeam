@@ -3,3 +3,63 @@
     justify-content: center;
 }
 
+.trip-container {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin: 1em;
+    position: relative;
+    align-items: stretch;
+}
+
+.points-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4caf50;
+    font-size: 4em;
+    height: 0.8em;
+}
+
+.details-container {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.endpoint-box {
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    flex-shrink: 0;
+    border: 1px solid #ccc;
+    margin: 0.1em 0;
+    border-radius: 0.2em;
+    z-index: 1;
+}
+
+.trip-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 5em;
+}
+
+.trip-info::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    z-index: -1;
+}
+
+.trip-info span {
+    padding: 0 10px;
+}
