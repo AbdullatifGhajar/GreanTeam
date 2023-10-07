@@ -3,3 +3,43 @@
     justify-content: center;
 }
 
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Center horizontally */
+    height: 10%;
+    margin: 2%;
+    color: antiquewhite;
+    border-color: antiquewhite;
+    /* Center vertically within the viewport */
+}
+
+.image-container {
+    margin-right: 2%;
+    max-width: 10%;
+    height: auto;
+
+}
+
+.number-container {
+    /* Background color for the number container */
+    color: #fff;
+    /* Text color for the number */
+    border-radius: 50%;
+    /* Makes it a circular container */
+    width: 48px;
+    /* Adjust as needed */
+    height: 48px;
+    /* Adjust as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    /* Adjust as needed */
+}
