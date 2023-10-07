@@ -19,7 +19,7 @@
     align-items: center;
     justify-content: center;
     background-color: #4caf50;
-    font-size: 4em;
+    font-size: 2em;
     height: 0.8em;
 }
 
@@ -62,4 +62,40 @@
 
 .trip-info span {
     padding: 0 10px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Center horizontally */
+    height: 10%;
+    margin: 2%;
+    color: antiquewhite;
+    border-color: antiquewhite;
+    /* Center vertically within the viewport */
+}
+
+.image-container {
+    margin-right: 2%;
+    max-width: 10%;
+    height: auto;
+}
+
+.number-container {
+    /* Background color for the number container */
+    color: #fff;
+    /* Text color for the number */
+    border-radius: 50%;
+    /* Adjust as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5em;
+    margin-left: 0.5em;
 }

@@ -1,9 +1,9 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {GlobalService} from "../global.service";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {HttpClient} from "@angular/common/http";
-import {FormControl} from "@angular/forms";
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
+import { GlobalService } from "../global.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { HttpClient } from "@angular/common/http";
+import { FormControl } from "@angular/forms";
 
 
 type TravelData = {
@@ -43,11 +43,11 @@ export class HomeComponent {
     lastMonth: number | null,
     lastYear: number | null
   } = {
-    firstMonth: null,
-    firstYear: null,
-    lastMonth: null,
-    lastYear: null
-  };
+      firstMonth: null,
+      firstYear: null,
+      lastMonth: null,
+      lastYear: null
+    };
 
   travelData: TravelData = {
     month: null,
