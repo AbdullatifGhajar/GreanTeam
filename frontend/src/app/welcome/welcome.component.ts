@@ -20,8 +20,6 @@ export class WelcomeComponent {
   private onLoginStatusChange(isLoggedIn: boolean) {
     if (isLoggedIn) {
       this.router.navigate(['home']);
-    } else {
-      this.router.navigate(['login']);
     }
   }
 }
