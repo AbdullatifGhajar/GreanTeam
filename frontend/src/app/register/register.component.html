@@ -25,7 +25,7 @@
     </mat-form-field>
     <mat-form-field class="example-full-width">
       <mat-label>Location history access token</mat-label>
-      <input type="email" matInput formControlName="name" placeholder="Your token">
+      <input type="email" matInput formControlName="token" placeholder="Your token">
       <mat-hint *ngIf="registerForm.controls.token.invalid">Enter your access token</mat-hint>
       <mat-error *ngIf="registerForm.controls.token.hasError('required')">
         Token is <strong>required</strong>.
